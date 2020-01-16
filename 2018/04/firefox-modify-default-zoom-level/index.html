@@ -5,22 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/blog/css/main.css">
+<link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
 
 
 <script id="hexo-configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
-    hostname: new URL('http://jactorsue.github.io/blog').hostname,
-    root: '/blog/',
+    hostname: new URL('http://jactorsue.github.io').hostname,
+    root: '/',
     scheme: 'Gemini',
     version: '7.7.0',
     exturl: false,
@@ -49,7 +49,7 @@
   <meta name="description" content="有时经常感觉Firefox默认的缩放配置显得字体比较小，但是在Firefox设置里面又没有对应的设置默认配置的选项，所以需要经常在新打开的页面通过Ctrl++或Ctrl+-来调整页面，并且Firefox会缓存所有调整过的页面的缩放比例，在再次打开该页面时会按照之前调整的缩放比例来显示，但是在遇到新的没有缓存过的页面的时候不得不再次调整，又或者在调试前端页面时需要清除缓存，这就很麻烦了，本文教你如">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Firefox浏览器修改默认缩放比例">
-<meta property="og:url" content="http://jactorsue.github.io/blog/2018/04/firefox-modify-default-zoom-level/index.html">
+<meta property="og:url" content="http://jactorsue.github.io/2018/04/firefox-modify-default-zoom-level/index.html">
 <meta property="og:site_name" content="Listen, recording">
 <meta property="og:description" content="有时经常感觉Firefox默认的缩放配置显得字体比较小，但是在Firefox设置里面又没有对应的设置默认配置的选项，所以需要经常在新打开的页面通过Ctrl++或Ctrl+-来调整页面，并且Firefox会缓存所有调整过的页面的缩放比例，在再次打开该页面时会按照之前调整的缩放比例来显示，但是在遇到新的没有缓存过的页面的时候不得不再次调整，又或者在调试前端页面时需要清除缓存，这就很麻烦了，本文教你如">
 <meta property="og:locale" content="zh_CN">
@@ -62,7 +62,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/jactorsue/figure-bed/blog/201804/waring.png">
 
-<link rel="canonical" href="http://jactorsue.github.io/blog/2018/04/firefox-modify-default-zoom-level/">
+<link rel="canonical" href="http://jactorsue.github.io/2018/04/firefox-modify-default-zoom-level/">
 
 
 <script id="page-configurations">
@@ -116,7 +116,7 @@
   <div class="site-meta">
 
     <div>
-      <a href="/blog/" class="brand" rel="start">
+      <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
         <span class="site-title">Listen, recording</span>
         <span class="logo-line-after"><i></i></span>
@@ -141,22 +141,22 @@
   <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">40</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">40</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">3</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">3</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">22</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">22</span></a>
 
   </li>
   </ul>
@@ -181,10 +181,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://jactorsue.github.io/blog/2018/04/firefox-modify-default-zoom-level/">
+    <link itemprop="mainEntityOfPage" href="http://jactorsue.github.io/2018/04/firefox-modify-default-zoom-level/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="image" content="/images/avatar.png">
       <meta itemprop="name" content="Jactor Sue">
       <meta itemprop="description" content="好好学习">
     </span>
@@ -219,7 +219,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blog/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/" itemprop="url" rel="index">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/" itemprop="url" rel="index">
                     <span itemprop="name">技术分享</span>
                   </a>
                 </span>
@@ -260,7 +260,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://jactorsue.github.io/blog/2018/04/firefox-modify-default-zoom-level/" title="Firefox浏览器修改默认缩放比例">http://jactorsue.github.io/blog/2018/04/firefox-modify-default-zoom-level/</a>
+    <a href="http://jactorsue.github.io/2018/04/firefox-modify-default-zoom-level/" title="Firefox浏览器修改默认缩放比例">http://jactorsue.github.io/2018/04/firefox-modify-default-zoom-level/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-ND</a> 许可协议。转载请注明出处！
@@ -272,7 +272,7 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/blog/tags/Firefox/" rel="tag"><i class="fa fa-tag"></i> Firefox</a>
+              <a href="/tags/Firefox/" rel="tag"><i class="fa fa-tag"></i> Firefox</a>
           </div>
 
         
@@ -282,7 +282,7 @@
     <div class="post-nav">
       <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/blog/2018/04/how-blog-on-githubpages-can-be-searched-by-google/" rel="next" title="让Google搜索到搭建在Github Pages上的博客">
+    <a href="/2018/04/how-blog-on-githubpages-can-be-searched-by-google/" rel="next" title="让Google搜索到搭建在Github Pages上的博客">
       让Google搜索到搭建在Github Pages上的博客 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -351,27 +351,27 @@
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="Jactor Sue"
-      src="/blog/images/avatar.png">
+      src="/images/avatar.png">
   <p class="site-author-name" itemprop="name">Jactor Sue</p>
   <div class="site-description" itemprop="description">好好学习</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/blog/archives/">
+          <a href="/archives/">
         
           <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-            <a href="/blog/categories/">
+            <a href="/categories/">
           
         <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="/blog/tags/">
+            <a href="/tags/">
           
         <span class="site-state-item-count">40</span>
         <span class="site-state-item-name">标签</span></a>
@@ -429,19 +429,19 @@
   </div>
 
   
-  <script src="/blog/lib/anime.min.js"></script>
-  <script src="/blog/lib/velocity/velocity.min.js"></script>
-  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/blog/js/utils.js"></script>
+<script src="/js/utils.js"></script>
 
-<script src="/blog/js/motion.js"></script>
-
-
-<script src="/blog/js/schemes/pisces.js"></script>
+<script src="/js/motion.js"></script>
 
 
-<script src="/blog/js/next-boot.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
 
 
 
