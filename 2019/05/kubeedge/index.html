@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://jactorsue.github.io/blog').hostname,
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":false,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="本文介绍 KubeEdge。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KubeEdge">
+<meta property="og:url" content="http://jactorsue.github.io/blog/2019/05/kubeedge/index.html">
+<meta property="og:site_name" content="Listen, recording">
+<meta property="og:description" content="本文介绍 KubeEdge。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://jactorsue.github.io/blog/2019/05/kubeedge/images/Figure1_KubeEdge_Architecture.png">
+<meta property="og:image" content="http://jactorsue.github.io/blog/2019/05/kubeedge/images/Figure2_KubeBus_Edge_Node_VPN.png">
+<meta property="og:image" content="http://jactorsue.github.io/blog/2019/05/kubeedge/images/Figure3_Connecting_Edge_VPN_to_Cloud_Network.png">
+<meta property="og:image" content="http://jactorsue.github.io/blog/2019/05/kubeedge/images/Figure4_KubeBus_Http_Protocal_Stack.png">
+<meta property="og:image" content="http://jactorsue.github.io/blog/2019/05/kubeedge/images/kubeedge_arch.png">
+<meta property="og:image" content="http://jactorsue.github.io/blog/2019/05/kubeedge/images/k3s-arch.svg">
+<meta property="og:image" content="http://jactorsue.github.io/blog/2019/05/kubeedge/images/k3s-model.jpeg">
+<meta property="og:image" content="http://jactorsue.github.io/blog/2019/05/kubeedge/images/kubeedge-model.jpeg">
+<meta property="article:published_time" content="2019-05-14T08:27:42.000Z">
+<meta property="article:modified_time" content="2020-01-16T06:23:39.050Z">
+<meta property="article:author" content="Jactor Sue">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="KubeEdge">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://jactorsue.github.io/blog/2019/05/kubeedge/images/Figure1_KubeEdge_Architecture.png">
+
+<link rel="canonical" href="http://jactorsue.github.io/blog/2019/05/kubeedge/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>KubeEdge | Listen, recording</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Listen, recording</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">Jactor的博客</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">40</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">3</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">22</span></a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://jactorsue.github.io/blog/2019/05/kubeedge/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="Jactor Sue">
+      <meta itemprop="description" content="好好学习">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Listen, recording">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          KubeEdge
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-05-14 16:27:42" itemprop="dateCreated datePublished" datetime="2019-05-14T16:27:42+08:00">2019-05-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 14:23:39" itemprop="dateModified" datetime="2020-01-16T14:23:39+08:00">2020-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/" itemprop="url" rel="index">
+                    <span itemprop="name">技术分享</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文介绍 KubeEdge。</p>
+<a id="more"></a>
+
+<h2 id="背景和相关工作"><a href="#背景和相关工作" class="headerlink" title="背景和相关工作"></a>背景和相关工作</h2><p>Hung Cao 和 Monica Wachowicz 开发了一个平台用来部署在运行中的公交车上，来收集实时数据进行分析有意义的规律。</p>
+<p>有人研究如何对 DNN 计算任务进行切分，研究计算切分策略来平衡在边缘服务器和云服务器的运行时间，来实现低延迟、低消耗和高吞吐量。</p>
+<p>有研究表明，通过在移动设备和数据中心之间进行调度来运行 DNN 计算，可以减少3.1倍延迟，减少59.5%移动端能量消耗，平均改进数据中心的吞吐量为原来的1.5倍</p>
+<p>Amazon AWS 和 Microsoft Azure 开发的 IoT 平台使用的是 Pub/Sub broker （MQTT 或 AMQP）来为 IoT 设备和云服务提供通信服务，Pub/Sub 协议适合于边缘设备和云设备之间的异步通信，而现在由于将计算任务分配到了边缘设备，所以边缘设备需要和云设备紧密通信，更多的需要的是基于同步 RPC 的通信方式。</p>
+<p>KubeEdge 优势：</p>
+<ul>
+<li>提供基于同步 RPC 的通信方式</li>
+<li>提供跨设备的统一的运行时环境，包括边缘节点和云节点</li>
+<li>提供 Serverless 功能</li>
+</ul>
+<h2 id="KubeEdge-架构"><a href="#KubeEdge-架构" class="headerlink" title="KubeEdge 架构"></a>KubeEdge 架构</h2><p><img src="images/Figure1_KubeEdge_Architecture.png" alt="KubeEdge Architecture"></p>
+<ul>
+<li>KubeBus: 用来连接边缘结点和云虚拟机的虚拟网络层，有独立的网络寻址空间，支持多租户，部署在边缘节点上的应用可以属于多个用户，这些属于不同用户的应用共享一个云服务器的KubeBus</li>
+<li>EdgeController: 一个 Kubernetes controller 插件，让 KubeEdge 和 Kubernetes 有能力像管理集群节点一样远程管理边缘节点，允许应用通过 Kubernetes API 从云服务器将应用部署到边缘服务器上</li>
+<li>MetadataSyncService:用来双向同步边缘节点和云节点的信息，其中包括应用和平台自身的信息</li>
+<li>EdgeCore:在边缘节点运行的轻量级代理，用来启动和管理容器化的应用和 Serverless functions</li>
+</ul>
+<h3 id="KubeBus"><a href="#KubeBus" class="headerlink" title="KubeBus"></a>KubeBus</h3><p>用来解决部署在边缘节点的应用与云服务器节点的网络连接问题。</p>
+<p>例如：在云服务器运行的视频应用客户端可以通过 KubeBus 发送 http 请求到运行着视频流服务的边缘节点，即使边缘节点在私有网络中。</p>
+<p>KubeBus 组件既运行在云节点（KubeBus@Cloud）也运行在边缘节点（KubeBus@Edge），支持多租户。</p>
+<h4 id="边缘节点与边缘节点之间的-VPN"><a href="#边缘节点与边缘节点之间的-VPN" class="headerlink" title="边缘节点与边缘节点之间的 VPN"></a>边缘节点与边缘节点之间的 VPN</h4><p><img src="images/Figure2_KubeBus_Edge_Node_VPN.png" alt="KubeBus Edge Node VPN"></p>
+<p>两个边缘节点可能在不同的私有网络里面，互相无法通信，KubeBus 通过在云服务器网络与私有网络之间建立的 TCP 连接之上实现 L3 延迟网络来解决网络问题。</p>
+<p>L2数据链路层建立 KubeBus@Edge 和 KubeBus@Cloud 之间的 TCP 长连接</p>
+<ul>
+<li>L2 建立双工网络，完成边缘节点和云节点的通信</li>
+<li>KubeBus@Cloud 也负责边缘节点之间的路由</li>
+</ul>
+<h4 id="将边缘节点与云节点网络连接"><a href="#将边缘节点与云节点网络连接" class="headerlink" title="将边缘节点与云节点网络连接"></a>将边缘节点与云节点网络连接</h4><p><img src="images/Figure3_Connecting_Edge_VPN_to_Cloud_Network.png" alt="Connecting Edge VPN to Cloud Network"></p>
+<h4 id="KubeEdge-HTTP-协议栈"><a href="#KubeEdge-HTTP-协议栈" class="headerlink" title="KubeEdge HTTP 协议栈"></a>KubeEdge HTTP 协议栈</h4><p><img src="images/Figure4_KubeBus_Http_Protocal_Stack.png" alt="KubeBus Http Protocal Stack"></p>
+<ul>
+<li>传输层 L4 是 KubeBus 中有错误容忍的可靠连接层，类似于 TCP</li>
+<li>在 L4 之上有两个 HTTP 反向代理，用来完成云边通信</li>
+<li>多租户：每个注册到 KubeBus 上的 web 服务都有一个全局唯一的标识符，由租户 id、端节点名称和服务名称组成。KubeBus 在转发和访问服务的时候，将全局标识符作为 URL 的一部分。</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">Http(s)://&#123;hostname&#125;/&#123;Trnant Name&#125;/&#123;Edge Node Name&#125;/&#123;Http WebService Name&#125;/...</span><br></pre></td></tr></table></figure>
+
+<h3 id="EdgeController"><a href="#EdgeController" class="headerlink" title="EdgeController"></a>EdgeController</h3><ul>
+<li>Kubernetes 的 controller 插件</li>
+<li>EdgeController 在云服务器上代表边缘节点</li>
+<li>并不直接运行边缘节点任务，而是通过 KubeBus 将任务信息发送到边缘节点</li>
+</ul>
+<h3 id="Metadata-Sync-Service"><a href="#Metadata-Sync-Service" class="headerlink" title="Metadata Sync Service"></a>Metadata Sync Service</h3><p>同步云边之间的元信息，解决两个问题：</p>
+<ul>
+<li>解决边缘节点离线场景的数据保存问题</li>
+<li>低带宽问题，同步期间的数据越小越好，使用增量同步</li>
+</ul>
+<h3 id="EdgeCore"><a href="#EdgeCore" class="headerlink" title="EdgeCore"></a>EdgeCore</h3><p>运行在每个边缘节点的轻量级代理，在 KubeEdge 平台注册，一个进程包含所有 KubeEdge 的功能，包含 KubeBus、MetadataSyncService、AppEngine 和本地 ETCD 存储。</p>
+<h3 id="最新架构"><a href="#最新架构" class="headerlink" title="最新架构"></a>最新架构</h3><p><img src="images/kubeedge_arch.png" alt="kube-edge-architecture"></p>
+<p>架构上分为三层：云、边缘和设备层。</p>
+<p>KubeEdge 的边缘进程包含：</p>
+<ul>
+<li>Edged：轻量化的 Kubelet， 实现 Pod、Volume、Node 等 Kubernetes 资源对象的生命周期管理。</li>
+<li>MetaManager：负责本地元数据的持久化，是边缘节点自治能力的关键。</li>
+<li>EdgeHub：多路复用的消息通道，提供可靠和高效的云边信息同步。</li>
+<li>DeviceTwin：用于抽象物理设备并在云服务器上生成一个设备状态的映射。</li>
+<li>EventBus：订阅来自 MQTT Broker 的设备数据。</li>
+</ul>
+<p>KubeEdge 的云服务器进程包含：</p>
+<ul>
+<li>CloudHub：接受 EdgeHub 同步到云的信息。</li>
+<li>EdgeController：用于控制Kubernetes API Server 与边缘节点之间对于应用和配置的状态的同步。</li>
+</ul>
+<p>Kubernetes master 运行在云服务器上，用户可以直接通过 kubectl 直接在云端管理边缘节点、设备和应用，使用习惯和原生 Kubernetes 保持一致。</p>
+<h3 id="与-K3s-的对比"><a href="#与-K3s-的对比" class="headerlink" title="与 K3s 的对比"></a>与 K3s 的对比</h3><p><img src="images/k3s-arch.svg" alt="k3s-arch"></p>
+<p>K3s 是 CNCF 官方认证的 Kubernetes 发行版本，专门为在资源有限的环境中运行 Kubernetes 研发和运维人员设计，目的是在 x86、ARM64 和 ARMv7D 架构的边缘节点上运行小型的 Kubernetes 集群。</p>
+<p><img src="images/k3s-model.jpeg" alt="k3s-model"></p>
+<p>KubeEdge 是一种完全去中心化的部署模式，管理面部署在云端，边缘节点只需要运行 Kubernetes 的 agent，无需太多资源，从 Kubernetes 的角度看，边缘节点 + 云节点 = 一个完整的 Kubernetes 集群。</p>
+<p><img src="images/kubeedge-model.jpeg" alt="kubeedge-model"></p>
+<p>K3s 会在边缘运行完整的 Kubernetes 集群，所以 K3s 不是一个去中心化的部署模型，每个边缘都需要额外部署 Kubernetes 管理面，这种部署带来的问题：</p>
+<ul>
+<li>资源耗费较大</li>
+<li>需要打通集群之间的网络</li>
+<li>为管理边缘 Kubernetes 集群，需要在集群之上叠加一层多集群管理组件（未开源）</li>
+</ul>
+<h3 id="KubeEdge-优势"><a href="#KubeEdge-优势" class="headerlink" title="KubeEdge 优势"></a>KubeEdge 优势</h3><ul>
+<li>云边协同：KubeEdge 通过 Kubernetes API 在云端管理边缘节点、设备和工作负载的增删改查，边缘节点的系统升级和应用程序更新都可以直接从云端下发，提升边缘节点的运维效率。</li>
+<li>边缘节点离线自治：离线场景下自主工作，不定期进行状态同步，只有在重连之后才会与云端控制面进行通信</li>
+<li>设备管理：KubeEdge 提供可插拔式的设备统一管理框架，允许用户在此框架上根据不同的协议或实际需求开发设备接入驱动，目前已经支持和计划支持的有：MQTT、BlueTooth、OPC UA、Modbus等。</li>
+<li>轻量级：在保留完整的 Kubernetes 控制面前提下（K3s 直接将一些功能删减），重新开发了 agent 代理， KubeEdge agent 的内存和 CPU 占用都比 K3s agent 小。</li>
+<li>KubeEdge 的多路复用消息通道（EdgeHub）相对于 Kubernetes 基于 HTTP 长连接的 list/watch 机制扩展性更好，允许大规模设备的接入。</li>
+</ul>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><p><a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8567693&tag=1" target="_blank" rel="noopener">Extend Cloud to Edge with KubeEdge</a></p>
+</li>
+<li><p><a href="https://www.semanticscholar.org/paper/MQTT-S-%E2%80%94-A-publish%2Fsubscribe-protocol-for-Wireless-Hunkeler-Truong/b592dc957029eb3a752e7bb35cd65012d7df6487" target="_blank" rel="noopener">MQTT-S — A publish/subscribe protocol for Wireless Sensor Networks</a></p>
+</li>
+<li><p><a href="https://bbs.huaweicloud.com/blogs/f907fe3c56bc11e9bd5a7ca23e93a891" target="_blank" rel="noopener">KubeEdge 向左，K3S 向右</a></p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Jactor Sue
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://jactorsue.github.io/blog/2019/05/kubeedge/" title="KubeEdge">http://jactorsue.github.io/blog/2019/05/kubeedge/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-ND</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/Kubernetes/" rel="tag"><i class="fa fa-tag"></i> Kubernetes</a>
+              <a href="/blog/tags/KubeEdge/" rel="tag"><i class="fa fa-tag"></i> KubeEdge</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2019/05/centos-7-static-ip-config/" rel="prev" title="CentOS 7 配置静态 IP">
+      <i class="fa fa-chevron-left"></i> CentOS 7 配置静态 IP
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2019/06/metallb-metal-cluster-also-has-load-balancer/" rel="next" title="MetalLB：裸集群也可以有负载均衡">
+      MetalLB：裸集群也可以有负载均衡 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景和相关工作"><span class="nav-text">背景和相关工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KubeEdge-架构"><span class="nav-text">KubeEdge 架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#KubeBus"><span class="nav-text">KubeBus</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#边缘节点与边缘节点之间的-VPN"><span class="nav-text">边缘节点与边缘节点之间的 VPN</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#将边缘节点与云节点网络连接"><span class="nav-text">将边缘节点与云节点网络连接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#KubeEdge-HTTP-协议栈"><span class="nav-text">KubeEdge HTTP 协议栈</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EdgeController"><span class="nav-text">EdgeController</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Metadata-Sync-Service"><span class="nav-text">Metadata Sync Service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EdgeCore"><span class="nav-text">EdgeCore</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最新架构"><span class="nav-text">最新架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#与-K3s-的对比"><span class="nav-text">与 K3s 的对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#KubeEdge-优势"><span class="nav-text">KubeEdge 优势</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-text">参考文献</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jactor Sue"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Jactor Sue</p>
+  <div class="site-description" itemprop="description">好好学习</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/jactor-sue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;jactor-sue" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jactor Sue</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+<link rel="stylesheet" href="/blog/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://jactorsue.github.io/blog').hostname,
+    root: '/blog/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":false,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="“越来越多的迹象标明，函数式编程已经不再是学术界的最爱，开始大步地在业界投入使用。”  Lambda 表达式是Java 8 发布的最重要的特性，这里对 Java Lambda 表达式做一些记录。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java8 Lambda 表达式">
+<meta property="og:url" content="http://jactorsue.github.io/blog/2019/04/java8-lambda-expression/index.html">
+<meta property="og:site_name" content="Listen, recording">
+<meta property="og:description" content="“越来越多的迹象标明，函数式编程已经不再是学术界的最爱，开始大步地在业界投入使用。”  Lambda 表达式是Java 8 发布的最重要的特性，这里对 Java Lambda 表达式做一些记录。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-04-24T10:00:54.000Z">
+<meta property="article:modified_time" content="2020-01-16T06:23:38.972Z">
+<meta property="article:author" content="Jactor Sue">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Lambda">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://jactorsue.github.io/blog/2019/04/java8-lambda-expression/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Java8 Lambda 表达式 | Listen, recording</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Listen, recording</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">Jactor的博客</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blog/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">40</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">3</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">22</span></a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://jactorsue.github.io/blog/2019/04/java8-lambda-expression/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/images/avatar.png">
+      <meta itemprop="name" content="Jactor Sue">
+      <meta itemprop="description" content="好好学习">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Listen, recording">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          Java8 Lambda 表达式
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-04-24 18:00:54" itemprop="dateCreated datePublished" datetime="2019-04-24T18:00:54+08:00">2019-04-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-16 14:23:38" itemprop="dateModified" datetime="2020-01-16T14:23:38+08:00">2020-01-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blog/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/" itemprop="url" rel="index">
+                    <span itemprop="name">技术分享</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>“越来越多的迹象标明，函数式编程已经不再是学术界的最爱，开始大步地在业界投入使用。”</p>
+</blockquote>
+<p>Lambda 表达式是Java 8 发布的最重要的特性，这里对 Java Lambda 表达式做一些记录。</p>
+<a id="more"></a>
+
+<h2 id="Lambda-表达式的引入"><a href="#Lambda-表达式的引入" class="headerlink" title="Lambda 表达式的引入"></a>Lambda 表达式的引入</h2><p>Java 是一门面向对象语言，而且也一直在完善自己的面向对象特性，除了基本的数据类型之外，一切都是对象，包括数组在内，这就意味着 Java 中定义的方法或者说函数不能独立于类存在，也不能将某一个方法或函数作为参数传递。</p>
+<p>而在函数式变成语言中，函数是一等公民，可以独立存在，可以将函数作为一个变量一样看待，也可以作为参数传递给其他函数，函数式编程的好处就不一一赘述，可以参考阮一峰的博文 <a href="http://www.ruanyifeng.com/blog/2012/04/functional_programming.html" target="_blank" rel="noopener">函数式编程初探</a>。</p>
+<p>Java 8 新增了函数式接口（Functional Interface）和 Lambda 表达式来引入函数式编程特性，新特性的引入大大提高了 Java 开发的效率。</p>
+<h2 id="Lambda-表达式结构"><a href="#Lambda-表达式结构" class="headerlink" title="Lambda 表达式结构"></a>Lambda 表达式结构</h2><p>Lambda 表达式是一种匿名函数（虽然这对 Java 而言这并不完全正确，但是可以暂时简单这么认为），简单地说，它是没有声明的方法，也没有访问修饰符、返回值声明和名字。</p>
+<p>你可以认为它是一种“临时工”，在你需要使用某个方法的地方写上它。如果某个方法只使用一次而且定义很简短，使用这种“临时工”尤其有效，这样，你就不必在类中费力写声明与方法了。</p>
+<p>Java 中的 Lambda 表达式通常使用 <code>(argument) -&gt; (body)</code> 语法书写，例如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">（arg1, arg2...) &gt; &#123; body &#125;</span><br><span class="line">(type1 arg1, type2 arg2...) -&gt; &#123; body &#125;</span><br></pre></td></tr></table></figure>
+
+<p>Lambda 表达式应该满足以下条件：</p>
+<ul>
+<li>一个 Lambda 表达式可以有零个或多个参数。</li>
+<li>参数的类型既可以明确声明，也可以根据上下文来推断。例如：<code>(int a)</code> 与 <code>(a)</code> 效果相同</li>
+<li>所有参数需包含在圆括号内，参数之间用逗号相隔。例如：<code>(a, b)</code> 或 <code>(int a, int b)</code> 或 <code>(String a, int b, float c)</code>。</li>
+<li>空圆括号代表参数集为空。例如：<code>() -&gt; 42</code>。</li>
+<li>当只有一个参数，且其类型可推导时，<code>（）</code>可省略。例如：<code>a -&gt; return a*a</code>。</li>
+<li>Lambda 表达式的主体可包含 0 条或多条语句。</li>
+<li>如果 Lambda 表达式的主体只有一条语句，花括号 <code>{}</code> 可省略。匿名函数的返回类型与该主体表达式一致。</li>
+<li>如果 Lambda 表达式的主体包含一条以上语句，则表达式必须包含在花括号 <code>{}</code> 中（形成代码块）。匿名函数的返回类型与代码块的返回类型一致，若没有返回则为空。</li>
+</ul>
+<p>下面给出一些合法的 Lambda 表达式的例子：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">(<span class="keyword">int</span> a, <span class="keyword">int</span> b) -&gt; &#123;  <span class="keyword">return</span> a + b; &#125;</span><br><span class="line"></span><br><span class="line">() -&gt; System.out.println(<span class="string">"Hello World"</span>);</span><br><span class="line"></span><br><span class="line">(String s) -&gt; &#123; System.out.println(s); &#125;</span><br><span class="line"></span><br><span class="line">() -&gt; <span class="number">42</span></span><br><span class="line"></span><br><span class="line">() -&gt; &#123; <span class="keyword">return</span> <span class="number">3.1415</span> &#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="函数式接口（Functional-Interface）"><a href="#函数式接口（Functional-Interface）" class="headerlink" title="函数式接口（Functional Interface）"></a>函数式接口（Functional Interface）</h2><p>在讲函数式接口之前先说一下 Java 中的标记接口（Marker Interface），标记接口是指没有属性和方法的空接口，例如 <code>java.io.Serializable</code> 接口就是空接口：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种接口只是作为一种标记存在，并不是要使用什么属性或方法，类似的还有 <code>java.lang.Cloneable</code>、<code>java.rmi.Remote</code> 等。</p>
+<p>类似于标记接口，函数式接口是指只有一个方法声明的接口，例如多线程编程时常用的 <code>Runnalble</code> 接口中只声明了一个 <code>run()</code> 方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>@FunctionalInterface</code> 是 Java 8 中新加入的一种接口，用于指明该接口类型声明是根据 Java 语言规范定义的函数式接口， Java 8 还声明了一些 Lambda 表达式可以使用的函数式接口，当你注释的接口不是有效的函数式接口时，可以使用 <code>@FunctionalInterface</code> 来解决编译时的错误。根据规范定义，函数式接口只能有一个抽象方法，如果你尝试添加第二个抽象方法，将抛出编译时错误。</p>
+<p>在 Java 8 中可以将 Lambda 隐式地赋值给函数式接口，比如，我们可以通过 Lambda 表达式创建 <code>Runnable</code> 接口的引用：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Runnable r = () -&gt; System.out.println(<span class="string">"New Thread Created"</span>);</span><br><span class="line">Thread t = <span class="keyword">new</span> Thread(r);</span><br><span class="line">t.start();</span><br></pre></td></tr></table></figure>
+
+<p>以上代码等价于：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Runnable r = <span class="keyword">new</span> Thread &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"New Thread Created"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">Thread t = <span class="keyword">new</span> Thread(r);</span><br><span class="line">t.start();</span><br></pre></td></tr></table></figure>
+
+<p>以上代码也可以简化如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">    System.out.println(<span class="string">"New Thread Created"</span>);</span><br><span class="line">&#125;).start();</span><br></pre></td></tr></table></figure>
+
+<p>在有了 Lambda 表达式之后代码变得清晰简洁。</p>
+<h2 id="Lambda-表达式的一些经典用法"><a href="#Lambda-表达式的一些经典用法" class="headerlink" title="Lambda 表达式的一些经典用法"></a>Lambda 表达式的一些经典用法</h2><p>Mario Fusco 在 <a href="https://dzone.com/articles/why-we-need-Lambda-expressions" target="_blank" rel="noopener">这篇文章</a> 中举了很多例子来解释为什么 Java 需要 Lambda 表达式，其中提到几个点：</p>
+<ul>
+<li>用内部迭代（Internal iteration）代替外部迭代（External Iteration）</li>
+<li>传递行为而不只是数据</li>
+<li>高效惰性计算（Laziness）</li>
+<li>贷款模式（Loan pattern）</li>
+</ul>
+<h3 id="外部迭代（External-iteration）-VS-内部迭代（Internal-iteration）"><a href="#外部迭代（External-iteration）-VS-内部迭代（Internal-iteration）" class="headerlink" title="外部迭代（External iteration） VS 内部迭代（Internal iteration）"></a>外部迭代（External iteration） VS 内部迭代（Internal iteration）</h3><p>现在要给定一个 <code>Integer</code> 列表：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; numbers = Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>);</span><br></pre></td></tr></table></figure>
+
+<p>然后用一个 <code>for</code> 循环来遍历并打印：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (Integer num : numbers) &#123;</span><br><span class="line">    System.out.println(num);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>很简单是吧？而且我们日常使用 <code>Collection</code> 类的时候也是这么做的，而在 Java 8 中可以这样写：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">numbers.forEach(<span class="keyword">new</span> Consumer&lt;Integer&gt;() &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(Integer value)</span> </span>&#123;</span><br><span class="line">        System.out.println(value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这种方式叫做“声明式（Declarative)编程”，相对应的之前的写法叫做“命令式（Imperative）编程”，声明式编程告诉机器你想要什么（what），让机器去想如何去做（how）。</p>
+<p>使用 Lambda 表达式可以让代码更加简洁可读：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">numbers.forEach((Integer value) -&gt; System.out.println(value));</span><br></pre></td></tr></table></figure>
+
+<p>在这里编译器看到 Lambda 表达式和 <code>Consumer</code> 接口的唯一未实现方法有相同的句柄（Signature），也就是前面说到的函数式接口，就将前者作为后者的一个实例，但是生成的字节码可能会有些不同。</p>
+<p>这个例子里 Lambda 表达式还可以将参数类型省略，编译器会自行推断：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">numbers.forEach(value -&gt; System.out.println(value));</span><br></pre></td></tr></table></figure>
+
+<p>我们还可以用 Java 8 中引入的另一个新特性方法引用（Method reference）来进一步简化代码，方法引用可以用新操作符 <code>::</code> 来引用实例方法和静态方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">numbers.forEach(System.out::println);</span><br></pre></td></tr></table></figure>
+
+<p>这种方式在函数式编程范式中被称作“Eta 表达式”，也就是说编译器可以将另一个具有相同句柄（Signature）的实例方法来转换成 <code>Consumer</code> 接口唯一抽象方法（函数式接口）的实现来使用。</p>
+<blockquote>
+<p>注意： 用 <code>forEach</code> 方法并不适用于数组，原因参考 <a href="https://stackoverflow.com/questions/35518471/in-java-8-why-were-arrays-not-given-the-foreach-method-of-iterable" target="_blank" rel="noopener">In Java 8, why were Arrays not given the forEach method of Iterable? - Stackoverflow</a></p>
+</blockquote>
+<h3 id="传递行为，而不只是值"><a href="#传递行为，而不只是值" class="headerlink" title="传递行为，而不只是值"></a>传递行为，而不只是值</h3><p>前面的例子只是用来表明 Lambda 表达式很有用，除此之外，将 Lambda 表达式传递给其他方法不仅可以将值传递，还可以将行为传递出去，以此提升抽象的级别，使代码更通用、灵活、可复用。</p>
+<p>我们还用之前那个例子进一步举例：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; numbers = Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>);</span><br></pre></td></tr></table></figure>
+
+<p>第一天，产品经理要求说要实现一个方法，来将列表中所有的数求和，你随手一写：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">sumAll</span><span class="params">(List&lt;Integer&gt; numbers)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> total = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> number : numbers) &#123;</span><br><span class="line">        total += number;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> total;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第二天，产品经理过来告诉你，由于业务需要还要实现一个将列表中所有偶数求和的函数，你信手拈来：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">sumAllEven</span><span class="params">(List&lt;Integer&gt; numbers)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> total = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> number : numbers) &#123;</span><br><span class="line">        <span class="keyword">if</span> (number % <span class="number">2</span> == <span class="number">0</span>) &#123;</span><br><span class="line">            total += number;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> total;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>过了几天，产品经理又过来了，说由于业务改进，需要将列表中所有比3大的数求和，你陷入了沉思：是可以继续像之前一下复制粘贴来完成业务需要的功能，但是是不是有什么地方可以改进呢？正所谓 “一写，二改，三重构”，现在是时候想想有没有更通用的做法了。</p>
+<p>这里可以使用 Java 8 中引入的新特性断言（Predicate）来定义在加和之前如何过滤数据：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">sumAll</span><span class="params">(List&lt;Integer&gt; numbers, Predicate&lt;Integer&gt; p)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> total = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> number : numbers) &#123;</span><br><span class="line">        <span class="keyword">if</span> (p.test(number)) &#123;</span><br><span class="line">            total += number;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> total;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>也就是说，我们不仅将数据的指（Integer 数组）传递给了函数，也将对加在这个数据之上的行为（断言）传递给了函数，这样就可以用三个简单的语句来完成上述功能：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">sumAll(numbers, n -&gt; <span class="keyword">true</span>);</span><br><span class="line">sumAll(numbers, n -&gt; n % <span class="number">2</span> == <span class="number">0</span>);</span><br><span class="line">sumAll(numbers, n -&gt; n &gt; <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这种用法类似于在函数式编程语言中常见的 <code>filter</code>。</p>
+<h3 id="高效惰性计算（Lazy-evaluation）"><a href="#高效惰性计算（Lazy-evaluation）" class="headerlink" title="高效惰性计算（Lazy evaluation）"></a>高效惰性计算（Lazy evaluation）</h3><p>使用内部迭代的另一个好处，也是在函数式编程范式中更常见的是惰性计算，我们可以用之前的例子来做一个解释，还是之前的那个整数列表：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; numbers = Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这次我们做一些复杂的操作，将列表中所有的偶数取平方，然后打印出比5大的数：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> number : numbers) &#123;</span><br><span class="line">    <span class="keyword">if</span> (number % <span class="number">2</span> == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">int</span> n2 = number * <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (n2 &gt; <span class="number">5</span>) &#123;</span><br><span class="line">            System.out.println(n2);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这么写的缺点就是一段代码中做的事情太多了，有很多嵌套结构，很难读也不容易维护。为了解决这个问题，我们可以把它分成三个部分，每个部分只做一件事：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isEven</span><span class="params">(<span class="keyword">int</span> number)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> number % <span class="number">2</span> == <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">doubleIt</span><span class="params">(<span class="keyword">int</span> number)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> number * <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isGreaterThan5</span><span class="params">(<span class="keyword">int</span> number)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> number &gt; <span class="number">5</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后重写一下上面的代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">List&lt;Integer&gt; l1 = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> n : numbers) &#123;</span><br><span class="line">    <span class="keyword">if</span> (isEven(n)) l1.add(n);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">List&lt;Integer&gt; l2 = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> n : l1) &#123;</span><br><span class="line">    l2.add(doubleIt(n));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">List&lt;Integer&gt; l3 = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> n : l2) &#123;</span><br><span class="line">    <span class="keyword">if</span> (isGreaterThan5(n)) l3.add(n);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">System.out.println(l3.get(<span class="number">0</span>));</span><br></pre></td></tr></table></figure>
+
+<p>这里用一个“流水线”来完成原来的功能，每个方法只处理一件事情，但是这样就比之前的好了吗？可能没有。原因有两个：第一，第二种比第一种看起来更啰嗦；第二，第二种方法实际上并没有第一种方法效率更高，因为第二种比第一种执行的步骤多了。我们可以给每个子函数设置一个输出语句，来验证这一点，得到的输出结果是：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">isEven: 1</span><br><span class="line">isEven: 2</span><br><span class="line">isEven: 3</span><br><span class="line">isEven: 4</span><br><span class="line">isEven: 5</span><br><span class="line">isEven: 6</span><br><span class="line">doubleIt: 2</span><br><span class="line">doubleIt: 4</span><br><span class="line">doubleIt: 6</span><br><span class="line">isGreaterThan5: 4</span><br><span class="line">isGreaterThan5: 8</span><br><span class="line">isGreaterThan5: 12</span><br><span class="line">8</span><br></pre></td></tr></table></figure>
+
+<p>从结果可以看出，列表中所有的6个数都经历了一遍流水线，而用前面嵌套 <code>for</code> 循环的方法只有前4个会经过流水线。</p>
+<p>使用 <code>Stream</code> 可以帮我们解决上面的问题，你可以在一个 <code>Collection</code> 类调用 <code>stream()</code> 方法创建 <code>Stream</code>，有了 <code>Stream</code> 我们就可以用一个流畅的代码解决前面的问题了：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(</span><br><span class="line">    numbers.stream()</span><br><span class="line">            .filter(Lazy::isEven)</span><br><span class="line">            .map(Lazy::doubleIt)</span><br><span class="line">            .filter(Lazy::isGreaterThan5)</span><br><span class="line">            .findFirst()</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>输出的结果是：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">isEven: <span class="number">1</span></span><br><span class="line">isEven: <span class="number">2</span></span><br><span class="line">doubleIt: <span class="number">2</span></span><br><span class="line">isGreaterThan5: <span class="number">4</span></span><br><span class="line">isEven: <span class="number">3</span></span><br><span class="line">isEven: <span class="number">4</span></span><br><span class="line">doubleIt: <span class="number">4</span></span><br><span class="line">isGreaterThan5: <span class="number">8</span></span><br><span class="line">IntOptional[<span class="number">8</span>]</span><br></pre></td></tr></table></figure>
+
+<p><code>Stream</code> 的惰性计算会在不必要的计算上节省很多CPU时间。</p>
+<h3 id="贷款模式（Load-pattern）"><a href="#贷款模式（Load-pattern）" class="headerlink" title="贷款模式（Load pattern）"></a>贷款模式（Load pattern）</h3><p>最后这个例子可以展示出如何更好地进行包装从而避免重复写代码，我们在写代码的时候可能会经常需要操控一些资源（比如文件、数据库、网络连接等），这里假如我们有个 <code>Resource</code> 类：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Resource</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Resource</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Opening resource"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Operating on resource"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dispose</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Disposing resource"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以创建、使用这个资源，在使用之后我们需要将其释放来避免一些错误，比如内存溢出、文件描述符溢出等：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Resource resource = <span class="keyword">new</span> Resource();</span><br><span class="line">resource.operate();</span><br><span class="line">resource.dispose();</span><br></pre></td></tr></table></figure>
+
+<p>但是，在我们使用资源的时候可能会出现一些问题，为了确保 <code>dispose()</code> 方法能被执行，我们应该把它放到一个 <code>finally</code> 块里面：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Resource resource = <span class="keyword">new</span> Resource();</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    resource.operate();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    resource.dispose();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么问题来了，当我们重复使用资源的时候，就得一遍一遍地重复写 <code>try/catch</code> 代码，一旦忘了释放资源就可能会导致溢出。</p>
+<p>为了解决这个问题，我们可以用一个静态方法来将 <code>try/catch</code> 代码段包装起来，如果这种资源在创建的时候需要参数，我们也可以将参数传入这个静态方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">withResource</span><span class="params">(Consumer&lt;Resource&gt; consumer)</span> </span>&#123;</span><br><span class="line">    Resource resource = <span class="keyword">new</span> Resource();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        consumer.accept(resource);</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        resource.dispose();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后我们就可以这样使用资源了：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">withResource(resource -&gt; resource.operate());</span><br></pre></td></tr></table></figure>
+
+<p>这样可以保证资源一定会被正确释放，而且不用重复写代码。</p>
+<p>这个方式叫做“贷款模式”，是因为“借出者”（持有资源的代码）在“借入者”（ 访问资源的 Lambda 表达式）使用完资源之后立即将资源收回。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="http://www.ruanyifeng.com/blog/2012/04/functional_programming.html" target="_blank" rel="noopener">函数式编程初探 - 阮一峰</a></li>
+<li><a href="https://dzone.com/articles/why-we-need-lambda-expressions" target="_blank" rel="noopener">Why We Need Lambda Expressions in Java - Mario Fusco</a></li>
+<li><a href="https://viralpatel.net/blogs/Lambda-expressions-java-tutorial/" target="_blank" rel="noopener">Java 8 Lambda Expressions Tutorial with Examples - Viral Patel</a></li>
+<li><a href="https://www.geeksforgeeks.org/marker-interface-java/" target="_blank" rel="noopener">Marker interface in Java - Gaurav Miglani</a></li>
+<li><a href="https://stackoverflow.com/questions/35518471/in-java-8-why-were-arrays-not-given-the-foreach-method-of-iterable" target="_blank" rel="noopener">In Java 8, why were Arrays not given the forEach method of Iterable? - Stackoverflow</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Jactor Sue
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://jactorsue.github.io/blog/2019/04/java8-lambda-expression/" title="Java8 Lambda 表达式">http://jactorsue.github.io/blog/2019/04/java8-lambda-expression/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-ND</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/blog/tags/Java/" rel="tag"><i class="fa fa-tag"></i> Java</a>
+              <a href="/blog/tags/Lambda/" rel="tag"><i class="fa fa-tag"></i> Lambda</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blog/2019/04/vscode-vim-auto-switch-inputmethod-in-linux/" rel="prev" title="Linux 下 VSCode Vim 自动切换输入法">
+      <i class="fa fa-chevron-left"></i> Linux 下 VSCode Vim 自动切换输入法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blog/2019/04/netease-cloud-music-cleanup/" rel="next" title="网易云音乐 for linux 版升级之后播放卡顿">
+      网易云音乐 for linux 版升级之后播放卡顿 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Lambda-表达式的引入"><span class="nav-text">Lambda 表达式的引入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lambda-表达式结构"><span class="nav-text">Lambda 表达式结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数式接口（Functional-Interface）"><span class="nav-text">函数式接口（Functional Interface）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lambda-表达式的一些经典用法"><span class="nav-text">Lambda 表达式的一些经典用法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#外部迭代（External-iteration）-VS-内部迭代（Internal-iteration）"><span class="nav-text">外部迭代（External iteration） VS 内部迭代（Internal iteration）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#传递行为，而不只是值"><span class="nav-text">传递行为，而不只是值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高效惰性计算（Lazy-evaluation）"><span class="nav-text">高效惰性计算（Lazy evaluation）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#贷款模式（Load-pattern）"><span class="nav-text">贷款模式（Load pattern）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-text">参考资料</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jactor Sue"
+      src="/blog/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Jactor Sue</p>
+  <div class="site-description" itemprop="description">好好学习</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blog/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blog/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blog/tags/">
+          
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/jactor-sue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;jactor-sue" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jactor Sue</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.7.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blog/lib/anime.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.min.js"></script>
+  <script src="/blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blog/js/utils.js"></script>
+
+<script src="/blog/js/motion.js"></script>
+
+
+<script src="/blog/js/schemes/pisces.js"></script>
+
+
+<script src="/blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
