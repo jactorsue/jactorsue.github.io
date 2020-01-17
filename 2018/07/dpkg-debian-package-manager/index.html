@@ -53,12 +53,14 @@
 <meta property="og:site_name" content="Listen, recording">
 <meta property="og:description" content="dpkg是基于Debian的Linux系统的包管理器">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/jactorsue/figure-bed/blog/201807/dpkg-list.png">
 <meta property="article:published_time" content="2018-07-10T08:48:09.000Z">
-<meta property="article:modified_time" content="2020-01-16T06:23:39.179Z">
+<meta property="article:modified_time" content="2020-01-16T10:55:24.575Z">
 <meta property="article:author" content="Jactor Sue">
 <meta property="article:tag" content="dpkg">
 <meta property="article:tag" content="Debian">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/jactorsue/figure-bed/blog/201807/dpkg-list.png">
 
 <link rel="canonical" href="http://jactorsue.github.io/2018/07/dpkg-debian-package-manager/">
 
@@ -144,7 +146,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">40</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">42</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -209,7 +211,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-16 14:23:39" itemprop="dateModified" datetime="2020-01-16T14:23:39+08:00">2020-01-16</time>
+                <time title="修改时间：2020-01-16 18:55:24" itemprop="dateModified" datetime="2020-01-16T18:55:24+08:00">2020-01-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -236,12 +238,14 @@
       
         <p><code>dpkg</code>是基于Debian的Linux系统的包管理器</p>
 <a id="more"></a>
+
 <h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p><code>dpkg -i package.deb</code> 安装<code>package</code></p>
 <h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p><code>dpkg -r package</code>或<code>dpkg --remove package</code> 删除<code>package</code>软件包，但保留配置文件<br><code>dpkg -P package</code>或<code>dpkg --purge package</code> 删除<code>package</code>软件包，且清除配置文件</p>
 <h3 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h3><p><code>dpkg -l package-pattern</code> 查看符合pattern的软件包<br><code>dpkg -S package-pattern</code>或<code>dpkg --search package-pattern</code> 在已经安装的软件包中搜索符合pattern的软件包<br><code>dpkg -L package</code>或<code>dpkg --listfiles package</code> 查看<code>package</code>软件包的安装目录信息<br><code>dpkg -s package</code>或<code>dpkg --status package</code> 查看<code>package</code>软件包的状态信息</p>
 <h3 id="dpkg数据库"><a href="#dpkg数据库" class="headerlink" title="dpkg数据库"></a><code>dpkg</code>数据库</h3><p><code>dpkg -l</code> 查看<code>dpkg</code>数据库</p>
-
-<p>第一列是软件包状态标识符，共三个字符<br>第一个字符是期望值(Desired=Unknown/Install/Remove/Purge/Hold)，包括：</p>
+<p><img src="https://raw.githubusercontent.com/jactorsue/figure-bed/blog/201807/dpkg-list.png" alt="dpkg-list"></p>
+<p>第一列是软件包状态标识符，共三个字符</p>
+<p>第一个字符是期望值(Desired=Unknown/Install/Remove/Purge/Hold)，包括：</p>
 <ul>
 <li><code>u</code>: Unknown，未知状态，意味着软件包未安装，且用户未发出安装请求</li>
 <li><code>i</code>: Install，用户请求安装软件包</li>
@@ -272,7 +276,10 @@
 <li><code>pn</code>: 表示安装了该软件又清除了</li>
 <li><code>un</code>: 表示从未安装过该软件</li>
 <li><code>iu</code>: 表示安装了该软件，但是未配置</li>
-<li><code>rc</code>: 表示该软件已经被删除，但是配置文件还在<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><a href="https://segmentfault.com/a/1190000011463440" target="_blank" rel="noopener">Linux软件安装管理之——dpkg与apt-*详解</a></li>
+<li><code>rc</code>: 表示该软件已经被删除，但是配置文件还在</li>
+</ul>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ul>
+<li><a href="https://segmentfault.com/a/1190000011463440" target="_blank" rel="noopener">Linux软件安装管理之——dpkg与apt-*详解</a></li>
 </ul>
 
     </div>
@@ -406,7 +413,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-count">42</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

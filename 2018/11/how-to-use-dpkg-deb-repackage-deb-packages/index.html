@@ -54,7 +54,7 @@
 <meta property="og:description" content="网易云音乐Linux客户端1.0版本在Ubuntu18由于缺少libqt5libqgtk2依赖无法安装，这里介绍一下解决办法，借此也来记录一下如何使用dpkg-deb命令对deb包重新打包。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2018-11-09T08:40:51.000Z">
-<meta property="article:modified_time" content="2020-01-16T06:23:38.997Z">
+<meta property="article:modified_time" content="2020-01-16T11:04:08.313Z">
 <meta property="article:author" content="Jactor Sue">
 <meta property="article:tag" content="dpkg-deb">
 <meta property="article:tag" content="deb">
@@ -144,7 +144,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">40</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">42</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -209,7 +209,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-16 14:23:38" itemprop="dateModified" datetime="2020-01-16T14:23:38+08:00">2020-01-16</time>
+                <time title="修改时间：2020-01-16 19:04:08" itemprop="dateModified" datetime="2020-01-16T19:04:08+08:00">2020-01-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -239,17 +239,23 @@
 
 <h2 id="解压缩deb文件"><a href="#解压缩deb文件" class="headerlink" title="解压缩deb文件"></a>解压缩<code>deb</code>文件</h2><p>首先一个文件夹<code>extract/DEBIAN</code>用来放安装包解压出来的文件，其中<code>extract</code>是用来放实际安装的文件，子目录<code>DEBIAN</code>是用来放<code>deb</code>包的控制文件的</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">mkdir extract/DEBIAN</span><br></pre></td></tr></table></figure>
+
 <p>解压安装文件：</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">dpkg-deb -x netease-cloud-music_1.0.0_amd64_ubuntu16.04.deb ./extract</span><br></pre></td></tr></table></figure>
+
 <p>解压控制文件：</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">dpkg-deb -e netease-cloud-music_1.0.0_amd64_ubuntu16.04.deb ./extract/DEBIAN</span><br></pre></td></tr></table></figure>
+
 <p>这时<code>extract</code>目录结构如下：</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">extract/</span><br><span class="line">├── DEBIAN</span><br><span class="line">│   ├── control</span><br><span class="line">│   └── md5sums</span><br><span class="line">└── usr</span><br><span class="line">    ├── bin</span><br><span class="line">    ├── lib</span><br><span class="line">    └── share</span><br></pre></td></tr></table></figure>
+
 <h2 id="修改文件"><a href="#修改文件" class="headerlink" title="修改文件"></a>修改文件</h2><p>现在的<code>extract</code>目录下的除了<code>DEBIAN</code>其他的文件在安装的时候是复制到对应的目录，<code>DEBIAN</code>目录下的<code>control</code>文件用于记录一些安装包信息，其中就包括依赖信息，<code>control</code>文件内容如下：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Package: netease-cloud-music</span><br><span class="line">Version: 1.0.0</span><br><span class="line">Architecture: amd64</span><br><span class="line">Maintainer: Deepin Sysdev &lt;sysdev@linuxdeepin.com&gt;</span><br><span class="line">Installed-Size: 110526</span><br><span class="line">Depends: libasound2 (&gt;&#x3D; 1.0.16), libatk1.0-0 (&gt;&#x3D; 1.12.4), libc6 (&gt;&#x3D; 2.14), libcairo2 (&gt;&#x3D; 1.6.0), libcups2 (&gt;&#x3D; 1.4.0), libdbus-1-3 (&gt;&#x3D; 1.9.14), libexpat1 (&gt;&#x3D; 2.0.1), libfontconfig1 (&gt;&#x3D; 2.11.94), libfreetype6 (&gt;&#x3D; 2.4.2), libgcc1 (&gt;&#x3D; 1:4.0), libgdk-pixbuf2.0-0 (&gt;&#x3D; 2.22.0), libglib2.0-0 (&gt;&#x3D; 2.37.3), libgtk2.0-0 (&gt;&#x3D; 2.24.0), libnspr4 (&gt;&#x3D; 2:4.9-2~) | libnspr4-0d (&gt;&#x3D; 1.8.0.10), libnss3 (&gt;&#x3D; 2:3.13.4-2~) | libnss3-1d (&gt;&#x3D; 3.12.4), libpango-1.0-0 (&gt;&#x3D; 1.14.0), libpangocairo-1.0-0 (&gt;&#x3D; 1.14.0), libqt5core5a (&gt;&#x3D; 5.5.0), libqt5dbus5 (&gt;&#x3D; 5.0.2), libqt5gui5 (&gt;&#x3D; 5.0.2) | libqt5gui5-gles (&gt;&#x3D; 5.0.2), libqt5multimedia5 (&gt;&#x3D; 5.0.2), libqt5network5 (&gt;&#x3D; 5.0.2), libqt5widgets5 (&gt;&#x3D; 5.0.2), libqt5x11extras5 (&gt;&#x3D; 5.1.0), libqt5xml5 (&gt;&#x3D; 5.0.2), libstdc++6 (&gt;&#x3D; 5.2), libx11-6 (&gt;&#x3D; 2:1.4.99.1), libxcursor1 (&gt;&gt; 1.1.2), libxext6, libxfixes3, libxi6 (&gt;&#x3D; 2:1.2.99.4), libxrandr2 (&gt;&#x3D; 2:1.2.99.2), libxrender1, libxss1, libxtst6, zlib1g (&gt;&#x3D; 1:1.2.3.3), gstreamer1.0-plugins-good, gstreamer1.0-plugins-bad, gstreamer1.0-plugins-ugly, libnspr4, libnss3, libqt5multimedia5-plugins, libqt5multimediawidgets5, libqt5libqgtk2</span><br><span class="line">Section: sound</span><br><span class="line">Priority: optional</span><br><span class="line">Homepage: http:&#x2F;&#x2F;www.deepin.org</span><br><span class="line">Description: netease cloud music player.</span><br><span class="line"> netease cloud music player.</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">Package: netease-cloud-music</span><br><span class="line">Version: 1.0.0</span><br><span class="line">Architecture: amd64</span><br><span class="line">Maintainer: Deepin Sysdev &lt;sysdev@linuxdeepin.com&gt;</span><br><span class="line">Installed-Size: 110526</span><br><span class="line">Depends: libasound2 (&gt;= 1.0.16), libatk1.0-0 (&gt;= 1.12.4), libc6 (&gt;= 2.14), libcairo2 (&gt;= 1.6.0), libcups2 (&gt;= 1.4.0), libdbus-1-3 (&gt;= 1.9.14), libexpat1 (&gt;= 2.0.1), libfontconfig1 (&gt;= 2.11.94), libfreetype6 (&gt;= 2.4.2), libgcc1 (&gt;= 1:4.0), libgdk-pixbuf2.0-0 (&gt;= 2.22.0), libglib2.0-0 (&gt;= 2.37.3), libgtk2.0-0 (&gt;= 2.24.0), libnspr4 (&gt;= 2:4.9-2~) | libnspr4-0d (&gt;= 1.8.0.10), libnss3 (&gt;= 2:3.13.4-2~) | libnss3-1d (&gt;= 3.12.4), libpango-1.0-0 (&gt;= 1.14.0), libpangocairo-1.0-0 (&gt;= 1.14.0), libqt5core5a (&gt;= 5.5.0), libqt5dbus5 (&gt;= 5.0.2), libqt5gui5 (&gt;= 5.0.2) | libqt5gui5-gles (&gt;= 5.0.2), libqt5multimedia5 (&gt;= 5.0.2), libqt5network5 (&gt;= 5.0.2), libqt5widgets5 (&gt;= 5.0.2), libqt5x11extras5 (&gt;= 5.1.0), libqt5xml5 (&gt;= 5.0.2), libstdc++6 (&gt;= 5.2), libx11-6 (&gt;= 2:1.4.99.1), libxcursor1 (&gt;&gt; 1.1.2), libxext6, libxfixes3, libxi6 (&gt;= 2:1.2.99.4), libxrandr2 (&gt;= 2:1.2.99.2), libxrender1, libxss1, libxtst6, zlib1g (&gt;= 1:1.2.3.3), gstreamer1.0-plugins-good, gstreamer1.0-plugins-bad, gstreamer1.0-plugins-ugly, libnspr4, libnss3, libqt5multimedia5-plugins, libqt5multimediawidgets5, libqt5libqgtk2</span><br><span class="line">Section: sound</span><br><span class="line">Priority: optional</span><br><span class="line">Homepage: http://www.deepin.org</span><br><span class="line">Description: netease cloud music player.</span><br><span class="line"> netease cloud music player.</span><br></pre></td></tr></table></figure>
+
 <p>可以看到<code>Dependens</code>中记录了安装这个包需要的依赖，我们将末尾的<code>libqt5libqgtk2</code>删除（连同之前的<code>，</code>）即可将该依赖删除。</p>
 <h2 id="重新打包"><a href="#重新打包" class="headerlink" title="重新打包"></a>重新打包</h2><p>然后就可以用如下命令重新打包了：</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">dpkg-deb -b ./extract ./build</span><br></pre></td></tr></table></figure>
+
 <p>之后就可以在<code>./build</code>目录下看到打包好的文件了，再次安装就不会因为依赖问题无法安装了。</p>
 
     </div>
@@ -383,7 +389,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-count">42</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

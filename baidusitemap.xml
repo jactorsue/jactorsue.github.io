@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://jactorsue.github.io/2019/05/kubeedge/</loc>
+    <lastmod>2020-01-16</lastmod>
+  </url>  <url>
+    <loc>http://jactorsue.github.io/2018/12/centos-upgrade-to-specific-release/</loc>
+    <lastmod>2020-01-16</lastmod>
+  </url>  <url>
+    <loc>http://jactorsue.github.io/2018/11/how-to-use-dpkg-deb-repackage-deb-packages/</loc>
+    <lastmod>2020-01-16</lastmod>
+  </url>  <url>
+    <loc>http://jactorsue.github.io/2018/11/create-maven-project-with-multi-modules/</loc>
+    <lastmod>2020-01-16</lastmod>
+  </url>  <url>
+    <loc>http://jactorsue.github.io/2018/10/translate-time-series-logging-tracking/</loc>
+    <lastmod>2020-01-16</lastmod>
+  </url>  <url>
+    <loc>http://jactorsue.github.io/2018/07/dpkg-debian-package-manager/</loc>
+    <lastmod>2020-01-16</lastmod>
+  </url>  <url>
     <loc>http://jactorsue.github.io/2018/04/how-blog-on-githubpages-can-be-searched-by-google/</loc>
     <lastmod>2020-01-16</lastmod>
   </url>  <url>
     <loc>http://jactorsue.github.io/2018/04/firefox-modify-default-zoom-level/</loc>
-    <lastmod>2020-01-16</lastmod>
-  </url>  <url>
-    <loc>http://jactorsue.github.io/2018/07/dpkg-debian-package-manager/</loc>
     <lastmod>2020-01-16</lastmod>
   </url>  <url>
     <loc>http://jactorsue.github.io/2018/05/tmux-terminal-multiplexing/</loc>
@@ -19,28 +34,16 @@
     <loc>http://jactorsue.github.io/2019/06/metallb-metal-cluster-also-has-load-balancer/</loc>
     <lastmod>2020-01-16</lastmod>
   </url>  <url>
-    <loc>http://jactorsue.github.io/2019/05/kubeedge/</loc>
-    <lastmod>2020-01-16</lastmod>
-  </url>  <url>
     <loc>http://jactorsue.github.io/2018/12/wolf-totem/</loc>
-    <lastmod>2020-01-16</lastmod>
-  </url>  <url>
-    <loc>http://jactorsue.github.io/2018/12/centos-upgrade-to-specific-release/</loc>
-    <lastmod>2020-01-16</lastmod>
-  </url>  <url>
-    <loc>http://jactorsue.github.io/2018/11/create-maven-project-with-multi-modules/</loc>
-    <lastmod>2020-01-16</lastmod>
-  </url>  <url>
-    <loc>http://jactorsue.github.io/2018/11/how-to-use-dpkg-deb-repackage-deb-packages/</loc>
     <lastmod>2020-01-16</lastmod>
   </url>  <url>
     <loc>http://jactorsue.github.io/2019/05/centos-7-static-ip-config/</loc>
     <lastmod>2020-01-16</lastmod>
   </url>  <url>
-    <loc>http://jactorsue.github.io/2018/11/linux-time-management/</loc>
+    <loc>http://jactorsue.github.io/2019/04/netease-cloud-music-cleanup/</loc>
     <lastmod>2020-01-16</lastmod>
   </url>  <url>
-    <loc>http://jactorsue.github.io/2019/04/netease-cloud-music-cleanup/</loc>
+    <loc>http://jactorsue.github.io/2018/11/linux-time-management/</loc>
     <lastmod>2020-01-16</lastmod>
   </url>  <url>
     <loc>http://jactorsue.github.io/2018/11/java-classpath-configuration/</loc>
@@ -52,19 +55,16 @@
     <loc>http://jactorsue.github.io/2019/04/java8-lambda-expression/</loc>
     <lastmod>2020-01-16</lastmod>
   </url>  <url>
-    <loc>http://jactorsue.github.io/2018/10/translate-time-series-logging-tracking/</loc>
-    <lastmod>2020-01-16</lastmod>
-  </url>  <url>
     <loc>http://jactorsue.github.io/2019/02/linux-ssh-password-free/</loc>
     <lastmod>2020-01-16</lastmod>
   </url>  <url>
     <loc>http://jactorsue.github.io/2019/01/useful-softwares/</loc>
     <lastmod>2020-01-16</lastmod>
   </url>  <url>
-    <loc>http://jactorsue.github.io/2018/10/nvm-node-version-manager/</loc>
+    <loc>http://jactorsue.github.io/2019/12/git-undo-summary/</loc>
     <lastmod>2020-01-16</lastmod>
   </url>  <url>
-    <loc>http://jactorsue.github.io/2019/12/git-undo-summary/</loc>
+    <loc>http://jactorsue.github.io/2018/10/nvm-node-version-manager/</loc>
     <lastmod>2020-01-16</lastmod>
   </url>
 </urlset>
