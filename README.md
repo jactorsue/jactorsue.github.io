@@ -1,3 +1,3 @@
 # Jactor Sue
 
-- ![Blog](https://jactorsue.github.io/blog)
+- [Blog](https://jactorsue.github.io/blog)
